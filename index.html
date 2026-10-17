@@ -124,6 +124,28 @@ input,select,textarea{font-size:16px}
   th,td{padding:6px 4px}
   td input,td select{width:58px;font-size:12px;padding:6px 3px}
 }
+
+.wstep{display:none}
+.wstep.on{display:block;animation:fadeUp .4s ease both}
+.wizbar{position:sticky;top:0;z-index:40;display:flex;gap:6px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:10px 12px;box-shadow:0 2px 10px rgba(0,38,63,.10)}
+.wiz-item{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 2px;border-radius:12px;font-size:11.5px;font-weight:700;color:#8aa0b8;cursor:pointer;font-family:"Poppins","Lato",sans-serif;border:1.5px solid transparent;transition:all .2s}
+.wiz-item em{font-style:normal}
+.wiz-item span{width:20px;height:20px;border-radius:50%;background:#e3ebf3;color:#8aa0b8;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;flex:none}
+.wiz-item.cur{color:var(--blu);border-color:var(--giallo);background:#fff}
+.wiz-item.cur span{background:var(--giallo);color:var(--blu-scuro);font-weight:900}
+.wiz-item.done{color:var(--ok)}
+.wiz-item.done span{background:var(--ok);color:#fff}
+.wiznav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.wiznav button{border:none;border-radius:999px;padding:13px 26px;font-size:15px;font-weight:800;cursor:pointer;font-family:"Poppins","Lato",sans-serif;transition:transform .18s ease,box-shadow .18s ease}
+.wiznav button:hover{transform:translateY(-2px)}
+.wnext{background:linear-gradient(135deg,var(--giallo2),var(--giallo));color:var(--blu-scuro);box-shadow:0 5px 14px rgba(255,204,0,.4);margin-left:auto}
+.wback{background:#fff;color:var(--blu);border:2px solid var(--blu)!important}
+.s4price{background:#eef4fb;border-left:4px solid var(--blu2);border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+.s4price b{color:var(--blu);font-size:19px;font-family:"Poppins","Lato",sans-serif}
+#wizToast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;z-index:120;background:var(--bad);color:#fff;padding:12px 24px;border-radius:999px;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none;max-width:92%;text-align:center}
+@media(min-width:761px){#wizToast{bottom:30px}}
+@media(max-width:480px){.wiz-item em{display:none}.wiz-item span{width:24px;height:24px;font-size:11.5px}}
+@media print{.wstep{display:none!important}.wizbar,.wiznav,#wizToast,.s4price{display:none!important}}
 @page{size:A4;margin:12mm}
 @media print{
   body::before{display:none}
@@ -187,9 +209,15 @@ input,select,textarea{font-size:16px}
   <div class="sub">Centro Post@ di Giuliani Enrico – Servizio Spedizioni</div>
   <div class="addr">Via Luigi Salvatore Cherubini 68/D – 10154 Torino · Tel. 011 6385156</div>
 </header>
+<nav class="wizbar">
+  <div class="wiz-item cur" onclick="wizGo(1)"><span>1</span><em>Destinazione</em></div>
+  <div class="wiz-item" onclick="wizGo(2)"><span>2</span><em>Colli</em></div>
+  <div class="wiz-item" onclick="wizGo(3)"><span>3</span><em>Prezzo</em></div>
+  <div class="wiz-item" onclick="wizGo(4)"><span>4</span><em>I tuoi dati</em></div>
+</nav>
 <div class="wrap">
 
-<div class="card">
+<div class="card wstep on" id="ws1">
   <div class="step">Passo 1 di 4</div>
   <h2>Dove vuoi spedire?</h2>
   <div class="mode">
@@ -219,9 +247,10 @@ input,select,textarea{font-size:16px}
     </div>
     <div id="intDetect" class="detect hidden"></div>
   </div>
+  <div class="wiznav"><span></span><button class="wnext" onclick="wizGo(2)">Avanti →</button></div>
 </div>
 
-<div class="card">
+<div class="card wstep" id="ws2">
   <div class="step">Passo 2 di 4</div>
   <h2>Cosa spedisci? <span style="font-size:12px;color:#888;font-weight:400">(peso in kg, misure in cm)</span></h2>
 
@@ -244,9 +273,10 @@ input,select,textarea{font-size:16px}
   <div class="note">* Il peso di fatturazione è il maggiore tra peso reale e peso volumetrico (L×P×A ÷ 5000).<br>
   * "Molto grande" = un lato superiore a 100 cm o il secondo lato superiore a 76 cm.</div>
   <div id="alert"></div>
+  <div class="wiznav"><button class="wback" onclick="wizGo(1)">← Indietro</button><button class="wnext" onclick="wizGo(3)">Avanti →</button></div>
 </div>
 
-<div class="card">
+<div class="card wstep" id="ws3">
   <div class="step">Passo 3 di 4</div>
   <h2>Il tuo preventivo</h2>
   <div id="resBox">
@@ -259,11 +289,13 @@ input,select,textarea{font-size:16px}
     <div class="note" id="resNote"></div>
   </div>
   <div id="resWarn" class="warn hidden"></div>
+  <div class="wiznav"><button class="wback" onclick="wizGo(2)">← Indietro</button><button class="wnext" onclick="wizGo(4)">Avanti →</button></div>
 </div>
 
-<div class="card">
+<div class="card wstep" id="ws4">
   <div class="step">Passo 4 di 4</div>
   <h2>I tuoi dati</h2>
+  <div id="s4price" class="s4price" style="display:none">💰 Il tuo preventivo: <b id="s4tot">—</b></div>
   <div class="formsec">📤 Mittente</div>
   <div class="grid2">
     <div class="field"><label class="lbl">Nome e cognome / Ragione sociale *</label><input type="text" id="mNome" placeholder="Mario Rossi"></div>
@@ -310,6 +342,7 @@ input,select,textarea{font-size:16px}
     <div class="field"><label class="lbl">Valore dichiarato (€)</label><input type="number" id="sValore" min="0" step="1" placeholder="Opzionale — per assicurazione"></div>
     <div class="field"><label class="lbl">Note generali</label><input type="text" id="fNote" placeholder="Es. merce fragile, ritiro pomeriggio..."></div>
   </div>
+  <div class="wiznav"><button class="wback" onclick="wizGo(3)">← Modifica preventivo</button><span></span></div>
   <div class="send no-print">
     <a class="btn-wa" id="btnWA" href="#" target="_blank">💬 Invia su WhatsApp</a>
     <a class="btn-mail" id="btnMail" href="#">✉️ Invia via Email</a>
@@ -378,6 +411,7 @@ Centro Post@ di Giuliani Enrico · Via L.S. Cherubini 68/D – 10154 Torino · T
 </footer>
 </div>
 
+<div id="wizToast"></div>
 <script>
 /* ══════════════════════════════════════════════════════════
    CONFIGURAZIONE (modificabile solo dal gestore)
@@ -633,6 +667,49 @@ function addRow(which){
 const val=el=>parseFloat(el.value)||0;
 const giorniValidita=()=>{const d=new Date();d.setDate(d.getDate()+5);return d.toLocaleDateString('it-IT');};
 
+let curStep=1, maxStep=1;
+function stepOk(n){
+  if(n===1){
+    const t=(mode==='naz'?document.getElementById('nazDest').value:document.getElementById('intDest').value).trim();
+    if(!t) return 'Inserisci CAP o città di destinazione';
+    if(mode==='naz'&&!detectNaz(t)) return 'Destinazione non riconosciuta — controlla CAP o città';
+    if(mode==='int'&&!detectInt(t)) return 'Paese non riconosciuto — controlla il nome';
+    return null;
+  }
+  if(n===2){
+    const rows=(RESULT&&RESULT.rows)?RESULT.rows:[];
+    if(!rows.length) return 'Inserisci almeno un collo';
+    if(!rows.some(r=>r.st.indexOf('OK')===0)) return 'Completa peso e le 3 misure di almeno un collo';
+    return null;
+  }
+  return null;
+}
+let toastT=null;
+function wizErr(msg){
+  const t=document.getElementById('wizToast');
+  t.textContent='⚠ '+msg;
+  t.style.display='block';
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>{t.style.display='none';},3200);
+}
+function wizGo(n){
+  if(n===curStep)return;
+  if(n>curStep&&n>maxStep){
+    for(let k=curStep;k<n;k++){
+      const e=stepOk(k);
+      if(e){wizErr(e);return;}
+    }
+    maxStep=n;
+  }
+  curStep=n;
+  document.querySelectorAll('.wstep').forEach((el,i)=>el.classList.toggle('on',i+1===curStep));
+  document.querySelectorAll('.wiz-item').forEach((el,i)=>{
+    el.classList.toggle('cur',i+1===curStep);
+    el.classList.toggle('done',i+1<curStep);
+    el.querySelector('span').textContent=(i+1<curStep)?'✓':String(i+1);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function setPickup(p){
   pickup=p;
   document.getElementById('pickOffice').classList.toggle('on',p==='office');
@@ -781,6 +858,8 @@ function calc(){
     ?'Imponibile '+fmt(prezzo)+' € + IVA 22% ('+fmt(prezzo*IVA)+' €) · valido fino al '+giorniValidita()
     :'';
   document.getElementById('resNote').textContent=note;
+  document.getElementById('s4tot').textContent=prezzo!=null?fmt(prezzo*(1+IVA))+' €':'da quotazione';
+  document.getElementById('s4price').style.display='';
   document.getElementById('stickyPrice').textContent=prezzo!=null?fmt(prezzo*(1+IVA))+' €':'—';
   document.getElementById('sticky').classList.toggle('hidden',prezzo==null);
   RESULT={mode,info,prezzo,note,rows,dest:destLabel,tw:totW};
