@@ -115,7 +115,34 @@ input,select,textarea{font-size:16px}
   th,td{padding:6px 4px}
   td input,td select{width:58px;font-size:12px;padding:6px 3px}
 }
-@media print{.no-print,.mode,.addrow{display:none!important}body{background:#fff;border-top:none}.card{box-shadow:none;animation:none}}
+@page{size:A4;margin:9mm}
+@media print{
+  body::before{display:none}
+  body{background:#fff;border-top:none;zoom:.72}
+  header{padding:12px 10px;box-shadow:none}
+  header h1{font-size:18px}
+  .wrap{margin:0 auto;max-width:100%;padding:0}
+  .card{position:static;box-shadow:none!important;animation:none;backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;border:1.2px solid #c8d4e0;padding:10px 14px;margin-bottom:8px;transform:none!important;page-break-inside:avoid;border-radius:10px}
+  .no-print,.mode,.addrow,.suggbox,#sticky{display:none!important}
+  h2{font-size:13.5px;margin-bottom:8px}
+  h2::before{width:8px;height:16px}
+  .step{font-size:9px;margin-bottom:3px}
+  table{font-size:10.5px;margin-top:4px}
+  th,td{padding:3px 4px}
+  th{font-size:9px}
+  td input,td select{width:56px;padding:3px;font-size:10px;background:#fff;border-color:#bbb}
+  input,select,textarea{font-size:11.5px;padding:5px 8px;background:#fff}
+  .field{margin-bottom:7px}
+  .grid2{gap:8px}
+  .pricebox{padding:12px;border-radius:12px;box-shadow:none;margin-top:2px}
+  .pricebox .prezzo{font-size:26px}
+  .ivatag{font-size:9px;margin-bottom:4px}
+  .detect{font-size:10.5px;padding:6px 10px;margin-top:5px}
+  .note{font-size:9px;margin-top:5px;line-height:1.4}
+  .warn{font-size:10.5px;padding:8px 10px}
+  textarea{height:auto}
+  footer{font-size:8.5px;padding:4px 0 0}
+}
 </style>
 </head>
 <body>
