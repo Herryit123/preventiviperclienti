@@ -26,8 +26,10 @@ header h1{margin:0;font-size:clamp(22px,5.5vw,34px);letter-spacing:-.5px;font-we
 header .sub{color:var(--giallo);font-weight:700;font-size:13.5px;margin-top:5px;position:relative}
 header .addr{font-size:12px;color:#c9d9ea;margin-top:7px;position:relative}
 .wrap{max-width:880px;margin:20px auto;padding:0 14px}
-.card{background:rgba(255,255,255,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:var(--raggio);padding:22px;margin-bottom:18px;box-shadow:var(--ombra);border:1px solid rgba(255,255,255,.7);animation:fadeUp .45s cubic-bezier(.2,.8,.3,1) both;transition:transform .2s ease,box-shadow .2s ease}
+.card{position:relative;background:rgba(255,255,255,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:var(--raggio);padding:22px;margin-bottom:18px;box-shadow:var(--ombra);border:1px solid rgba(255,255,255,.7);animation:fadeUp .45s cubic-bezier(.2,.8,.3,1) both;transition:transform .2s ease,box-shadow .2s ease}
 .card:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,38,63,.14)}
+.card:has(.suggbox:not(.hidden)),.card.sugg-on{z-index:60}
+.card:hover:not(:has(.suggbox:not(.hidden))):not(.sugg-on){z-index:2}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 h2{font-size:19px;color:var(--blu);margin:0 0 16px;font-weight:800;display:flex;align-items:center;gap:10px;letter-spacing:-.2px;font-family:"Poppins","Lato",sans-serif}
 h2::before{content:"";width:12px;height:24px;background:linear-gradient(160deg,var(--giallo2) 0%,var(--giallo) 55%,#f5b800 100%);border-radius:7px;flex:none;box-shadow:0 3px 8px rgba(245,184,0,.45)}
@@ -390,8 +392,10 @@ function setupSuggest(inputId,boxId,fn){
   function render(){
     items=fn(inp.value);
     active=-1;
-    if(!items.length||document.activeElement!==inp){box.classList.add('hidden');box.innerHTML='';return;}
+    if(!items.length||document.activeElement!==inp){box.classList.add('hidden');box.innerHTML='';const c0=inp.closest('.card');if(c0)c0.classList.remove('sugg-on');return;}
     const q=inp.value.trim().length;
+    const card=inp.closest('.card');
+    if(card)card.classList.toggle('sugg-on',!(document.activeElement!==inp||!items.length));
     box.innerHTML=items.map((it,i)=>{
       const main=(it.hl!=null&&it.hl>=0&&q>0)?it.main.slice(0,it.hl)+'<span class="hl">'+it.main.slice(it.hl,it.hl+q)+'</span>'+it.main.slice(it.hl+q):it.main;
       return '<button type="button" data-i="'+i+'">'+main+(it.zone?' <span class="z">'+it.zone+'</span>':'')+'</button>';
@@ -407,7 +411,7 @@ function setupSuggest(inputId,boxId,fn){
   }
   inp.addEventListener('input',()=>{render();});
   inp.addEventListener('focus',render);
-  inp.addEventListener('blur',()=>setTimeout(()=>box.classList.add('hidden'),180));
+  inp.addEventListener('blur',()=>setTimeout(()=>{box.classList.add('hidden');const c=inp.closest('.card');if(c)c.classList.remove('sugg-on');},180));
   inp.addEventListener('keydown',e=>{
     if(box.classList.contains('hidden')||!items.length)return;
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){
