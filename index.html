@@ -72,6 +72,10 @@ td.selc select{width:auto;background:#fff}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid31{display:grid;grid-template-columns:2.4fr 1fr 1.2fr;gap:12px}
 @media(max-width:600px){.grid31{grid-template-columns:1.4fr .8fr 1fr}}
+.picktoggle{display:flex;gap:8px;background:var(--grigio);padding:5px;border-radius:14px}
+.picktoggle button{flex:1;border:none;background:transparent;padding:11px 8px;border-radius:10px;font-size:13.5px;font-weight:700;cursor:pointer;color:#5a7a99;font-family:"Poppins","Lato",sans-serif;transition:all .2s}
+.picktoggle button.on{background:#fff;color:var(--blu);box-shadow:0 3px 10px rgba(0,38,63,.14)}
+.pickinfo{background:#eef4fb;border-left:4px solid var(--blu2);border-radius:10px;padding:10px 14px;font-size:13px;margin-top:4px;line-height:1.55}
 .formsec{font-size:12px;font-weight:800;color:var(--blu);text-transform:uppercase;letter-spacing:.6px;margin:16px 0 10px;display:flex;align-items:center;gap:7px}
 .formsec:first-of-type{margin-top:2px}
 .formsec::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--giallo);box-shadow:0 2px 5px rgba(245,184,0,.5)}
@@ -260,19 +264,29 @@ input,select,textarea{font-size:16px}
 <div class="card">
   <div class="step">Passo 4 di 4</div>
   <h2>I tuoi dati</h2>
-  <div class="formsec">📤 Mittente — ritiro del pacco</div>
+  <div class="formsec">📤 Mittente</div>
   <div class="grid2">
     <div class="field"><label class="lbl">Nome e cognome / Ragione sociale *</label><input type="text" id="mNome" placeholder="Mario Rossi"></div>
     <div class="field"><label class="lbl">Telefono *</label><input type="tel" id="mTel" placeholder="333 1234567"></div>
   </div>
-  <div class="grid2">
-    <div class="field"><label class="lbl">Email</label><input type="email" id="mMail" placeholder="mario@email.it"></div>
-    <div class="field"><label class="lbl">Città *</label><input type="text" id="mCitta" placeholder="Torino"></div>
+  <div class="field"><label class="lbl">Email</label><input type="email" id="mMail" placeholder="mario@email.it"></div>
+  <div class="field"><label class="lbl">Luogo di ritiro del pacco</label>
+    <div class="picktoggle">
+      <button type="button" id="pickOffice" class="on" onclick="setPickup('office')">🏠 Presso il nostro ufficio</button>
+      <button type="button" id="pickHome" onclick="setPickup('home')">🚚 Ritiro a domicilio</button>
+    </div>
   </div>
-  <div class="grid31">
-    <div class="field"><label class="lbl">Via / Piazza *</label><input type="text" id="mVia" placeholder="Via Roma"></div>
-    <div class="field"><label class="lbl">N° civico *</label><input type="text" id="mCiv" placeholder="10"></div>
-    <div class="field"><label class="lbl">CAP *</label><div class="sugg"><input type="text" id="mCap" placeholder="10154" inputmode="numeric"><div id="mCapSugg" class="suggbox hidden"></div></div></div>
+  <div id="officeInfo" class="pickinfo">📍 <b>Centro Post@ di Giuliani Enrico</b><br>Via Luigi Salvatore Cherubini 68/D – 10154 Torino</div>
+  <div id="homeFields" class="hidden">
+    <div class="grid31">
+      <div class="field"><label class="lbl">Via / Piazza *</label><input type="text" id="mVia" placeholder="Via Roma"></div>
+      <div class="field"><label class="lbl">N° civico *</label><input type="text" id="mCiv" placeholder="10"></div>
+      <div class="field"><label class="lbl">CAP *</label><div class="sugg"><input type="text" id="mCap" placeholder="10154" inputmode="numeric"><div id="mCapSugg" class="suggbox hidden"></div></div></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label class="lbl">Città *</label><input type="text" id="mCitta" placeholder="Torino"></div>
+      <div class="field"><label class="lbl">Nome al citofono / referente ritiro</label><input type="text" id="ritWho" placeholder="Es. Rossi Mario, portineria"></div>
+    </div>
   </div>
   <div class="formsec">📥 Destinatario — consegna del pacco</div>
   <div class="grid2">
@@ -373,6 +387,8 @@ const IVA  = 0.22;
 const FUEL_NAZ = 10;
 const EV_NAZ   = 0;
 const EV_INT   = 10;
+const SEDE     = "Via Luigi Salvatore Cherubini 68/D – 10154 Torino";
+const NOME_NEGOZIO = "Centro Post@ di Giuliani Enrico";
 const EMAIL  = "centropostatorino12@gmail.com";
 const WHATSAPP = "390116385156";
 
@@ -386,6 +402,7 @@ const fmt = n => n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFracti
 const fmt1 = n => n.toLocaleString('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1});
 let mode = 'naz';
 let RESULT = null;
+let pickup = 'office';
 
 /* ═══════════ DATABASE LOCALITÀ NAZIONALI ═══════════
    zona: NAZ = Italia continentale (24/48h) · SCS = Sicilia/Calabria/Sardegna (2-4 gg) */
@@ -616,6 +633,14 @@ function addRow(which){
 const val=el=>parseFloat(el.value)||0;
 const giorniValidita=()=>{const d=new Date();d.setDate(d.getDate()+5);return d.toLocaleDateString('it-IT');};
 
+function setPickup(p){
+  pickup=p;
+  document.getElementById('pickOffice').classList.toggle('on',p==='office');
+  document.getElementById('pickHome').classList.toggle('on',p==='home');
+  document.getElementById('officeInfo').classList.toggle('hidden',p!=='office');
+  document.getElementById('homeFields').classList.toggle('hidden',p!=='home');
+  calc();
+}
 function setMode(m){
   mode=m;
   document.getElementById('mNaz').classList.toggle('on',m==='naz');
@@ -762,7 +787,7 @@ function calc(){
   updateLinks();updateInvoice();
 }
 
-['mNome','mTel','mMail','mVia','mCiv','mCap','mCitta','dNome','dTel','dVia','dCiv','dCap','dCitta','dProv','dNote','sContenuto','sValore','fNote','nazDest','intDest'].forEach(id=>{
+['mNome','mTel','mMail','mVia','mCiv','mCap','mCitta','dNome','dTel','dVia','dCiv','dCap','dCitta','dProv','dNote','sContenuto','sValore','fNote','ritWho','nazDest','intDest'].forEach(id=>{
   const e=document.getElementById(id);
   e.addEventListener('input',calc);e.addEventListener('change',calc);
 });
@@ -777,7 +802,9 @@ function buildMsg(){
   RESULT.rows.forEach(r=>{m+='- Collo '+r.n+(r.w!=null?': '+r.w+' kg, '+r.l+'x'+r.p+'x'+r.h+' cm, peso tassato '+r.tw+' kg ['+r.st+']':' ['+r.st+']')+'\n';});
   if(RESULT.note)m+='\nNote: '+RESULT.note+'\n';
   m+='\n*Preventivo: '+(RESULT.prezzo!=null?fmt(RESULT.prezzo*(1+IVA))+' € (IVA inclusa)':'da quotazione')+'*\n';
-  m+='\n*MITTENTE (ritiro)*\n'+v('mNome')+'\nTel: '+v('mTel')+(v('mMail')?' · '+v('mMail'):'')+'\n'+v('mVia')+' '+v('mCiv')+', '+v('mCap')+' '+v('mCitta')+'\n';
+  m+='\n*MITTENTE*\n'+v('mNome')+'\nTel: '+v('mTel')+(v('mMail')?' · '+v('mMail'):'')+'\n';
+  if(pickup==='office'){m+='Ritiro: presso il nostro ufficio ('+SEDE+')\n';}
+  else{m+='Ritiro a domicilio: '+v('mVia')+' '+v('mCiv')+', '+v('mCap')+' '+v('mCitta')+(v('ritWho')?' (citofono/referente: '+v('ritWho')+')':'')+'\n';}
   m+='\n*DESTINATARIO (consegna)*\n'+v('dNome')+'\nTel: '+v('dTel')+'\n'+v('dVia')+' '+v('dCiv')+', '+v('dCap')+' '+v('dCitta')+(v('dProv')?' ('+v('dProv')+')':'')+'\n';
   if(v('dNote'))m+='Note consegna: '+v('dNote')+'\n';
   m+='\n*SPEDIZIONE*\nContenuto: '+(v('sContenuto')||'—')+'\nValore dichiarato: '+(v('sValore')||'—')+'\nNote: '+(v('fNote')||'—');
@@ -804,7 +831,8 @@ function updateInvoice(){
   }
   set('invMNome',v('mNome')||'—');
   set('invMTel',(v('mTel')||'—')+(v('mMail')?' · '+v('mMail'):''));
-  set('invMInd',(v('mVia')&&v('mCiv')?v('mVia')+' '+v('mCiv')+', ':'')+(v('mCap')?v('mCap')+' ':'')+(v('mCitta')||'—'));
+  if(pickup==='office'){set('invMInd','Presso il nostro ufficio — '+SEDE);}
+  else{set('invMInd','RITIRO A DOMICILIO: '+(v('mVia')&&v('mCiv')?v('mVia')+' '+v('mCiv')+', ':'')+(v('mCap')?v('mCap')+' ':'')+(v('mCitta')||'—')+(v('ritWho')?' · citofono: '+v('ritWho'):''));}
   set('invDNome',v('dNome')||'—');
   set('invDTel',v('dTel')||'—');
   set('invDInd',(v('dVia')&&v('dCiv')?v('dVia')+' '+v('dCiv')+', ':'')+(v('dCap')?v('dCap')+' ':'')+(v('dCitta')||'—')+(v('dProv')?' ('+v('dProv')+')':''));
