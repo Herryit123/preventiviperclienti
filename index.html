@@ -70,6 +70,11 @@ td.selc select{width:auto;background:#fff}
 .warn{background:#fdecea;color:var(--bad);font-weight:700;padding:13px 15px;border-radius:12px;margin-top:10px;font-size:14px;border-left:5px solid var(--bad)}
 .note{font-size:12.5px;color:#7d93a9;margin-top:10px;line-height:1.6}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid31{display:grid;grid-template-columns:2.4fr 1fr 1.2fr;gap:12px}
+@media(max-width:600px){.grid31{grid-template-columns:1.4fr .8fr 1fr}}
+.formsec{font-size:12px;font-weight:800;color:var(--blu);text-transform:uppercase;letter-spacing:.6px;margin:16px 0 10px;display:flex;align-items:center;gap:7px}
+.formsec:first-of-type{margin-top:2px}
+.formsec::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--giallo);box-shadow:0 2px 5px rgba(245,184,0,.5)}
 .send{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .send a,.send button{flex:1;min-width:200px;text-align:center;text-decoration:none;padding:16px;border-radius:999px;font-size:16px;font-weight:700;font-family:"Poppins","Lato",sans-serif;cursor:pointer;border:none;transition:transform .18s ease,box-shadow .18s ease;position:relative;overflow:hidden}
 .send a:hover,.send button:hover{transform:translateY(-3px) scale(1.01)}
@@ -115,7 +120,7 @@ input,select,textarea{font-size:16px}
   th,td{padding:6px 4px}
   td input,td select{width:58px;font-size:12px;padding:6px 3px}
 }
-@page{size:A4;margin:9mm}
+@page{size:A4;margin:12mm}
 @media print{
   body::before{display:none}
   body{background:#fff;border-top:none;zoom:.72}
@@ -143,7 +148,34 @@ input,select,textarea{font-size:16px}
   textarea{height:auto}
   footer{font-size:8.5px;padding:4px 0 0}
 }
+#invoice{display:none}
+@media print{
+  header,.wrap .card,footer,#sticky{display:none!important}
+  body{zoom:1;background:#fff}
+  #invoice{display:block;color:#000;font-family:"Lato",Arial,sans-serif;font-size:11.5px;line-height:1.45}
+  .inv-head{text-align:center;border-bottom:2.5px solid #000;padding-bottom:7px;margin-bottom:12px}
+  .inv-brand{font-size:19px;font-weight:900;letter-spacing:.5px}
+  .inv-sub{font-size:10.5px;margin-top:2px}
+  .inv-title{text-align:center;font-size:15px;font-weight:900;letter-spacing:2px;margin:10px 0 8px}
+  .inv-meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}
+  .inv-block{margin:7px 0 3px}
+  .inv-table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:3px}
+  .inv-table th,.inv-table td{border:1px solid #000;padding:4px 6px;text-align:center}
+  .inv-table th{background:#e8e8e8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .inv-totals{width:70mm;margin:10px 0 0 auto;border-collapse:collapse;font-size:11.5px}
+  .inv-totals td{border:1px solid #000;padding:4px 8px}
+  .inv-totals td:last-child{text-align:right;white-space:nowrap}
+  .inv-grand td{font-weight:900;font-size:14px;background:#e8e8e8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .inv-client{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}
+  .inv-client td{border:1px solid #000;padding:4px 8px}
+  .inv-cond{font-size:9px;margin-top:12px;border-top:1px solid #000;padding-top:6px;line-height:1.4}
+  .inv-sign{display:flex;justify-content:space-between;gap:30mm;margin-top:22mm}
+  .inv-signbox{text-align:center;font-size:10.5px;font-weight:700}
+  .inv-line{width:60mm;border-bottom:1px solid #000;margin-top:14mm}
+}
+
 </style>
+<base target="_blank">
 </head>
 <body>
 <header>
@@ -228,21 +260,98 @@ input,select,textarea{font-size:16px}
 <div class="card">
   <div class="step">Passo 4 di 4</div>
   <h2>I tuoi dati</h2>
+  <div class="formsec">📤 Mittente — ritiro del pacco</div>
   <div class="grid2">
-    <div class="field"><label class="lbl">Nome e cognome *</label><input type="text" id="fNome" placeholder="Mario Rossi"></div>
-    <div class="field"><label class="lbl">Telefono *</label><input type="tel" id="fTel" placeholder="333 1234567"></div>
+    <div class="field"><label class="lbl">Nome e cognome / Ragione sociale *</label><input type="text" id="mNome" placeholder="Mario Rossi"></div>
+    <div class="field"><label class="lbl">Telefono *</label><input type="tel" id="mTel" placeholder="333 1234567"></div>
   </div>
   <div class="grid2">
-    <div class="field"><label class="lbl">Email</label><input type="email" id="fMail" placeholder="mario@email.it"></div>
-    <div class="field"><label class="lbl">Città di ritiro</label><input type="text" id="fCitta" placeholder="Torino"></div>
+    <div class="field"><label class="lbl">Email</label><input type="email" id="mMail" placeholder="mario@email.it"></div>
+    <div class="field"><label class="lbl">Città *</label><input type="text" id="mCitta" placeholder="Torino"></div>
   </div>
-  <div class="field"><label class="lbl">Note</label><textarea id="fNote" rows="2" placeholder="Es. ritiro al piano terra, merce fragile..."></textarea></div>
+  <div class="grid31">
+    <div class="field"><label class="lbl">Via / Piazza *</label><input type="text" id="mVia" placeholder="Via Roma"></div>
+    <div class="field"><label class="lbl">N° civico *</label><input type="text" id="mCiv" placeholder="10"></div>
+    <div class="field"><label class="lbl">CAP *</label><div class="sugg"><input type="text" id="mCap" placeholder="10154" inputmode="numeric"><div id="mCapSugg" class="suggbox hidden"></div></div></div>
+  </div>
+  <div class="formsec">📥 Destinatario — consegna del pacco</div>
+  <div class="grid2">
+    <div class="field"><label class="lbl">Nome e cognome / Ragione sociale *</label><input type="text" id="dNome" placeholder="Luigi Bianchi"></div>
+    <div class="field"><label class="lbl">Telefono destinatario *</label><input type="tel" id="dTel" placeholder="338 7654321"></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label class="lbl">Città *</label><input type="text" id="dCitta" placeholder="Milano"></div>
+    <div class="field"><label class="lbl">Provincia / Nazione</label><input type="text" id="dProv" placeholder="MI"></div>
+  </div>
+  <div class="grid31">
+    <div class="field"><label class="lbl">Via / Piazza *</label><input type="text" id="dVia" placeholder="Corso Italia"></div>
+    <div class="field"><label class="lbl">N° civico *</label><input type="text" id="dCiv" placeholder="5"></div>
+    <div class="field"><label class="lbl">CAP *</label><div class="sugg"><input type="text" id="dCap" placeholder="20100" inputmode="numeric"><div id="dCapSugg" class="suggbox hidden"></div></div></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label class="lbl">Note per il corriere</label><input type="text" id="dNote" placeholder="Es. piano 3, citofono Bianchi, mattina"></div>
+    <div class="field"><label class="lbl">Contenuto del pacco</label><input type="text" id="sContenuto" placeholder="Es. documenti, abiti, ricambi..."></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label class="lbl">Valore dichiarato (€)</label><input type="number" id="sValore" min="0" step="1" placeholder="Opzionale — per assicurazione"></div>
+    <div class="field"><label class="lbl">Note generali</label><input type="text" id="fNote" placeholder="Es. merce fragile, ritiro pomeriggio..."></div>
+  </div>
   <div class="send no-print">
     <a class="btn-wa" id="btnWA" href="#" target="_blank">💬 Invia su WhatsApp</a>
     <a class="btn-mail" id="btnMail" href="#">✉️ Invia via Email</a>
     <button class="btn-print" onclick="window.print()">🖨️ Stampa / PDF</button>
   </div>
   <div class="note" style="margin-top:12px">Cliccando "Invia" si aprirà WhatsApp o il tuo programma di posta con il riepilogo già compilato: dovrai solo premere invio. I dati non vengono salvati né trasmessi ad altri.</div>
+</div>
+
+
+<div id="invoice" aria-hidden="true">
+  <div class="inv-head">
+    <div class="inv-brand">CENTRO POST@ DI GIULIANI ENRICO</div>
+    <div class="inv-sub">Via Luigi Salvatore Cherubini 68/D – 10154 Torino · Tel. 011 6385156</div>
+  </div>
+  <div class="inv-title">PREVENTIVO DI SPEDIZIONE</div>
+  <div class="inv-meta">
+    <span>Data: <b id="invDate"></b></span>
+    <span>Valido fino al: <b id="invValid"></b></span>
+  </div>
+  <div class="inv-block"><b>DESTINAZIONE:</b> <span id="invDest"></span></div>
+  <div class="inv-block"><b>DETTAGLIO COLLI:</b></div>
+  <table class="inv-table" id="invColli">
+    <thead><tr><th>Collo</th><th>Peso reale (kg)</th><th>Misure L×P×A (cm)</th><th>Peso tassato (kg)</th><th>Stato</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div class="inv-block" id="invNote"></div>
+  <table class="inv-totals">
+    <tr><td>Peso tassato totale</td><td id="invTw"></td></tr>
+    <tr><td>Imponibile</td><td id="invImp"></td></tr>
+    <tr><td>IVA 22%</td><td id="invIva"></td></tr>
+    <tr class="inv-grand"><td>TOTALE</td><td id="invTot"></td></tr>
+  </table>
+  <div class="inv-block"><b>MITTENTE (ritiro):</b></div>
+  <table class="inv-client">
+    <tr><td style="width:26%">Nome / Ragione sociale</td><td id="invMNome"></td></tr>
+    <tr><td>Telefono / Email</td><td id="invMTel"></td></tr>
+    <tr><td>Indirizzo</td><td id="invMInd"></td></tr>
+  </table>
+  <div class="inv-block"><b>DESTINATARIO (consegna):</b></div>
+  <table class="inv-client">
+    <tr><td style="width:26%">Nome / Ragione sociale</td><td id="invDNome"></td></tr>
+    <tr><td>Telefono</td><td id="invDTel"></td></tr>
+    <tr><td>Indirizzo</td><td id="invDInd"></td></tr>
+    <tr><td>Note consegna</td><td id="invDNote"></td></tr>
+  </table>
+  <div class="inv-block"><b>DETTAGLIO SPEDIZIONE:</b></div>
+  <table class="inv-client">
+    <tr><td style="width:26%">Contenuto</td><td id="invCont"></td></tr>
+    <tr><td>Valore dichiarato</td><td id="invVal"></td></tr>
+    <tr><td>Note</td><td id="invNoteC"></td></tr>
+  </table>
+  <div class="inv-cond">Preventivo indicativo calcolato sui dati inseriti, valido 5 giorni dalla data di emissione. Pallet e colli fuori dimensione possono richiedere 1-3 giorni lavorativi aggiuntivi. Eventuali difformità di peso/dimensioni rilevate dal vettore comportano rettifiche automatiche.</div>
+  <div class="inv-sign">
+    <div class="inv-signbox"><span>Firma del Cliente</span><div class="inv-line"></div></div>
+    <div class="inv-signbox"><span>Firma del Responsabile</span><div class="inv-line"></div></div>
+  </div>
 </div>
 
 <div id="sticky" class="hidden">
@@ -457,6 +566,32 @@ function setupSuggest(inputId,boxId,fn){
   });
   return {has:()=>fn(inp.value).length>0};
 }
+function setupCapSuggest(capId,cittaId,boxId){
+  const inp=document.getElementById(capId),box=document.getElementById(boxId),cit=document.getElementById(cittaId);
+  let items=[];
+  function render(){
+    const t=inp.value.trim();
+    items=(t.length>=3&&/^\d+$/.test(t))?suggNaz(t):[];
+    if(!items.length||document.activeElement!==inp){box.classList.add('hidden');return;}
+    box.innerHTML=items.map((it,i)=>'<button type="button" data-i="'+i+'">'+it.main+' <span class="z">'+it.zone+'</span></button>').join('');
+    box.classList.remove('hidden');
+    box.querySelectorAll('button').forEach(b=>b.addEventListener('mousedown',e=>{e.preventDefault();pick(parseInt(b.dataset.i));}));
+  }
+  function pick(i){
+    const it=items[i];if(!it)return;
+    inp.value=it.value;
+    const city=it.main.replace(/^\d+\s+/,'');
+    if(cit&&!cit.value)cit.value=city;
+    box.classList.add('hidden');
+    calc();
+  }
+  inp.addEventListener('input',render);
+  inp.addEventListener('focus',render);
+  inp.addEventListener('blur',()=>setTimeout(()=>box.classList.add('hidden'),180));
+}
+setupCapSuggest('mCap','mCitta','mCapSugg');
+setupCapSuggest('dCap','dCitta','dCapSugg');
+
 const nazSugg=setupSuggest('nazDest','nazSugg',suggNaz);
 const intSugg=setupSuggest('intDest','intSugg',suggInt);
 
@@ -623,11 +758,11 @@ function calc(){
   document.getElementById('resNote').textContent=note;
   document.getElementById('stickyPrice').textContent=prezzo!=null?fmt(prezzo*(1+IVA))+' €':'—';
   document.getElementById('sticky').classList.toggle('hidden',prezzo==null);
-  RESULT={mode,info,prezzo,note,rows,dest:destLabel};
-  updateLinks();
+  RESULT={mode,info,prezzo,note,rows,dest:destLabel,tw:totW};
+  updateLinks();updateInvoice();
 }
 
-['fNome','fTel','fMail','fCitta','fNote','nazDest','intDest'].forEach(id=>{
+['mNome','mTel','mMail','mVia','mCiv','mCap','mCitta','dNome','dTel','dVia','dCiv','dCap','dCitta','dProv','dNote','sContenuto','sValore','fNote','nazDest','intDest'].forEach(id=>{
   const e=document.getElementById(id);
   e.addEventListener('input',calc);e.addEventListener('change',calc);
 });
@@ -637,14 +772,46 @@ function buildMsg(){
   const v=id=>document.getElementById(id).value.trim();
   let m='*RICHIESTA PREVENTIVO SPEDIZIONE*\n';
   m+='Data: '+new Date().toLocaleDateString('it-IT')+'\n';
-  m+='Tipo: '+RESULT.info+'\n';
-  let m2='';
-  RESULT.rows.forEach(r=>{m2+='- Collo '+r.n+(r.w!=null?': '+r.w+' kg, '+r.l+'x'+r.p+'x'+r.h+' cm, peso tassato '+r.tw+' kg ['+r.st+']':' ['+r.st+']')+'\n';});
+  m+='Destinazione: '+RESULT.info+'\n';
+  m+='\n*Colli:*\n';
+  RESULT.rows.forEach(r=>{m+='- Collo '+r.n+(r.w!=null?': '+r.w+' kg, '+r.l+'x'+r.p+'x'+r.h+' cm, peso tassato '+r.tw+' kg ['+r.st+']':' ['+r.st+']')+'\n';});
   if(RESULT.note)m+='\nNote: '+RESULT.note+'\n';
-  m+='\n*Colli:*\n'+m2;
   m+='\n*Preventivo: '+(RESULT.prezzo!=null?fmt(RESULT.prezzo*(1+IVA))+' € (IVA inclusa)':'da quotazione')+'*\n';
-  m+='\n*Miei dati:*\nNome: '+v('fNome')+'\nTelefono: '+v('fTel')+(v('fMail')?'\nEmail: '+v('fMail'):'')+(v('fCitta')?'\nRitiro a: '+v('fCitta'):'')+(v('fNote')?'\nNote: '+v('fNote'):'');
+  m+='\n*MITTENTE (ritiro)*\n'+v('mNome')+'\nTel: '+v('mTel')+(v('mMail')?' · '+v('mMail'):'')+'\n'+v('mVia')+' '+v('mCiv')+', '+v('mCap')+' '+v('mCitta')+'\n';
+  m+='\n*DESTINATARIO (consegna)*\n'+v('dNome')+'\nTel: '+v('dTel')+'\n'+v('dVia')+' '+v('dCiv')+', '+v('dCap')+' '+v('dCitta')+(v('dProv')?' ('+v('dProv')+')':'')+'\n';
+  if(v('dNote'))m+='Note consegna: '+v('dNote')+'\n';
+  m+='\n*SPEDIZIONE*\nContenuto: '+(v('sContenuto')||'—')+'\nValore dichiarato: '+(v('sValore')||'—')+'\nNote: '+(v('fNote')||'—');
   return m;
+}
+function updateInvoice(){
+  const v=id=>document.getElementById(id).value.trim();
+  const set=(id,val)=>{document.getElementById(id).textContent=val;};
+  set('invDate',new Date().toLocaleDateString('it-IT'));
+  const vd=new Date();vd.setDate(vd.getDate()+5);
+  set('invValid',vd.toLocaleDateString('it-IT'));
+  set('invDest',RESULT&&RESULT.dest?RESULT.info:'—');
+  document.querySelector('#invColli tbody').innerHTML=(RESULT&&RESULT.rows.length)
+    ?RESULT.rows.map(r=>'<tr><td>'+r.n+'</td><td>'+(r.w!=null?r.w:'—')+'</td><td>'+(r.l!=null?r.l+'×'+r.p+'×'+r.h:'—')+'</td><td>'+(r.tw!=null?r.tw:'—')+'</td><td>'+r.st+'</td></tr>').join('')
+    :'<tr><td colspan="5">Nessun collo inserito</td></tr>';
+  set('invNote',(RESULT&&RESULT.note)?'Note: '+RESULT.note:'');
+  set('invTw',(RESULT&&RESULT.prezzo!=null)?fmt1(RESULT.tw)+' kg':'—');
+  if(RESULT&&RESULT.prezzo!=null){
+    set('invImp',fmt(RESULT.prezzo)+' €');
+    set('invIva',fmt(RESULT.prezzo*IVA)+' €');
+    set('invTot',fmt(RESULT.prezzo*(1+IVA))+' €');
+  }else{
+    set('invImp','da quotazione');set('invIva','—');set('invTot','da quotazione');
+  }
+  set('invMNome',v('mNome')||'—');
+  set('invMTel',(v('mTel')||'—')+(v('mMail')?' · '+v('mMail'):''));
+  set('invMInd',(v('mVia')&&v('mCiv')?v('mVia')+' '+v('mCiv')+', ':'')+(v('mCap')?v('mCap')+' ':'')+(v('mCitta')||'—'));
+  set('invDNome',v('dNome')||'—');
+  set('invDTel',v('dTel')||'—');
+  set('invDInd',(v('dVia')&&v('dCiv')?v('dVia')+' '+v('dCiv')+', ':'')+(v('dCap')?v('dCap')+' ':'')+(v('dCitta')||'—')+(v('dProv')?' ('+v('dProv')+')':''));
+  set('invDNote',v('dNote')||'—');
+  set('invCont',v('sContenuto')||'—');
+  set('invVal',v('sValore')?v('sValore')+' €':'—');
+  set('invNoteC',v('fNote')||'—');
 }
 function goWA(e){
   e.preventDefault();
@@ -660,5 +827,7 @@ function updateLinks(){
 for(let i=0;i<3;i++){addRow('naz');addRow('int');}
 calc();
 </script>
+</body>
+</html>
 </body>
 </html>
