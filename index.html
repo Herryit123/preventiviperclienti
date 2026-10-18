@@ -227,7 +227,6 @@ td.delc{padding:4px 2px}
 }
 </style>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
 <header>
@@ -336,6 +335,7 @@ td.delc{padding:4px 2px}
   </div>
   <div id="officeInfo" class="pickinfo">📍 <b>Centro Post@ di Giuliani Enrico</b><br>Via Luigi Salvatore Cherubini 68/D – 10154 Torino</div>
   <div id="homeFields" class="hidden">
+    <div class="field"><label class="lbl">🔍 Cerca il tuo indirizzo (via e numero) <span style="font-weight:400;color:#888">— opzionale, suggerimenti da OpenStreetMap</span></label><div class="sugg"><input type="text" id="gAddrM" placeholder="Es. Via Roma 10, Chivasso" autocomplete="off"><div id="gAddrMSugg" class="suggbox hidden"></div></div></div>
     <div class="grid31">
       <div class="field"><label class="lbl">Via / Piazza *</label><input type="text" id="mVia" placeholder="Via Roma"></div>
       <div class="field"><label class="lbl">N° civico *</label><input type="text" id="mCiv" placeholder="10"></div>
@@ -347,6 +347,7 @@ td.delc{padding:4px 2px}
     </div>
   </div>
   <div class="formsec">📥 Destinatario — consegna del pacco</div>
+  <div class="field"><label class="lbl">🔍 Cerca l'indirizzo di consegna (via e numero) <span style="font-weight:400;color:#888">— opzionale, suggerimenti da OpenStreetMap</span></label><div class="sugg"><input type="text" id="gAddrD" placeholder="Es. Corso Italia 5, Milano" autocomplete="off"><div id="gAddrDSugg" class="suggbox hidden"></div></div></div>
   <div class="grid2">
     <div class="field"><label class="lbl">Nome e cognome / Ragione sociale *</label><input type="text" id="dNome" placeholder="Luigi Bianchi"></div>
     <div class="field"><label class="lbl">Telefono destinatario *</label><input type="tel" id="dTel" placeholder="338 7654321"></div>
@@ -808,6 +809,61 @@ function autoFillDest(detNaz,detInt){
     window._lastAuto={citta:prev.citta||'',cap:prev.cap||'',sigla:prev.sigla||'',prov:detInt.name};
   }
 }
+
+/* ═══ RICERCA INDIRIZZO (Photon/OpenStreetMap) ═══ */
+const PH_DELAY=(typeof window!=='undefined'&&window._PH_DELAY)||300;
+const CAP2SIG={};CAP_DB.forEach(r=>{CAP2SIG[r[0]]=r[2]||'';});
+let phTimer=null, phAb=null;
+function setupPhoton(inputId,boxId,map){
+  const inp=document.getElementById(inputId),box=document.getElementById(boxId);
+  let items=[];
+  function render(){
+    const q=inp.value.trim();
+    if(q.length<4){box.classList.add('hidden');return;}
+    clearTimeout(phTimer);
+    phTimer=setTimeout(()=>{
+      if(phAb)phAb.abort();
+      phAb=new AbortController();
+      fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(q)+'&limit=6&lang=it&bbox=6.5,36.5,18.7,47.2',{signal:phAb.signal})
+        .then(r=>r.json())
+        .then(d=>{
+          items=(d.features||[]).map(f=>{
+            const p=f.properties||{};
+            const via=p.street||p.name||'';
+            const civ=p.housenumber||'';
+            const cap=p.postcode&&String(p.postcode).slice(0,5)||'';
+            const city=p.city||p.town||p.village||p.municipality||p.county||'';
+            const label=((via+' '+civ).trim()||p.name||'');
+            return {via,civ,cap,city,prov:cap?(CAP2SIG[cap]||''):'',label:(label+', '+(cap?cap+' ':'')+city).replace(/, $/,'')};
+          }).filter(x=>x.label.length>3);
+          if(!items.length||document.activeElement!==inp){box.classList.add('hidden');return;}
+          box.innerHTML=items.map((it,i)=>'<button type="button" data-i="'+i+'">📍 '+it.label+'</button>').join('');
+          box.classList.remove('hidden');
+          box.querySelectorAll('button').forEach(b=>b.addEventListener('mousedown',e=>{e.preventDefault();pick(parseInt(b.dataset.i));}));
+        })
+        .catch(()=>{});
+    },PH_DELAY);
+  }
+  function pick(i){
+    const it=items[i];if(!it)return;
+    const set=(id,v)=>{const f=document.getElementById(id);if(f&&v&&(!f.value||f.value===it._old))f.value=v;};
+    if(map.via)set(map.via,it.via);
+    if(map.civ)set(map.civ,it.civ);
+    if(map.cap)set(map.cap,it.cap);
+    if(map.citta)set(map.citta,it.city);
+    if(map.prov&&it.prov)set(map.prov,it.prov);
+    inp.value=it.label;
+    box.classList.add('hidden');
+    calc();
+  }
+  inp.addEventListener('input',render);
+  inp.addEventListener('focus',render);
+  inp.addEventListener('blur',()=>setTimeout(()=>box.classList.add('hidden'),200));
+  return {render,pick};
+}
+const phM=setupPhoton('gAddrM','gAddrMSugg',{via:'mVia',civ:'mCiv',cap:'mCap',citta:'mCitta',prov:''});
+const phD=setupPhoton('gAddrD','gAddrDSugg',{via:'dVia',civ:'dCiv',cap:'dCap',citta:'dCitta',prov:'dProv'});
+
 function setPickup(p){
   pickup=p;
   document.getElementById('pickOffice').classList.toggle('on',p==='office');
