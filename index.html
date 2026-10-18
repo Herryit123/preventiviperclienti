@@ -142,60 +142,33 @@ input,select,textarea{font-size:16px}
 @media(min-width:761px){#wizToast{bottom:30px}}
 @media(max-width:480px){.wiz-item em{display:none}.wiz-item span{width:24px;height:24px;font-size:11.5px}}
 @media print{.wstep{display:none!important}.wizbar,.wiznav,#wizToast,.s4price{display:none!important}}
-@page{size:A4;margin:12mm}
-@media print{
-  body::before{display:none}
-  body{background:#fff;border-top:none;zoom:.72}
-  header{padding:12px 10px;box-shadow:none}
-  header h1{font-size:18px}
-  .wrap{margin:0 auto;max-width:100%;padding:0}
-  .card{position:static;box-shadow:none!important;animation:none;backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;border:1.2px solid #c8d4e0;padding:10px 14px;margin-bottom:8px;transform:none!important;page-break-inside:avoid;border-radius:10px}
-  .no-print,.mode,.addrow,.suggbox,#sticky{display:none!important}
-  h2{font-size:13.5px;margin-bottom:8px}
-  h2::before{width:8px;height:16px}
-  .step{font-size:9px;margin-bottom:3px}
-  table{font-size:10.5px;margin-top:4px}
-  th,td{padding:3px 4px}
-  th{font-size:9px}
-  td input,td select{width:56px;padding:3px;font-size:10px;background:#fff;border-color:#bbb}
-  input,select,textarea{font-size:11.5px;padding:5px 8px;background:#fff}
-  .field{margin-bottom:7px}
-  .grid2{gap:8px}
-  .pricebox{padding:12px;border-radius:12px;box-shadow:none;margin-top:2px}
-  .pricebox .prezzo{font-size:26px}
-  .ivatag{font-size:9px;margin-bottom:4px}
-  .detect{font-size:10.5px;padding:6px 10px;margin-top:5px}
-  .note{font-size:9px;margin-top:5px;line-height:1.4}
-  .warn{font-size:10.5px;padding:8px 10px}
-  textarea{height:auto}
-  footer{font-size:8.5px;padding:4px 0 0}
-}
+@page{size:A4;margin:9mm}
 #invoice{display:none}
 @media print{
   header,.wrap .card,footer{display:none!important}
   body{zoom:1;background:#fff}
-  #invoice{display:block;color:#000;font-family:"Lato",Arial,sans-serif;font-size:11.5px;line-height:1.45}
-  .inv-head{display:flex;justify-content:space-between;align-items:center;text-align:left;border-bottom:2.5px solid #000;padding-bottom:7px;margin-bottom:12px}
+  #invoice{display:block;color:#000;font-family:"Lato",Arial,sans-serif;font-size:10px;line-height:1.3;zoom:.9}
+  .inv-head{display:flex;justify-content:space-between;align-items:center;text-align:left;border-bottom:2.5px solid #000;padding-bottom:4px;margin-bottom:6px}
   .inv-logo{height:21mm}
   .inv-headtxt{text-align:right}
   .inv-brand{font-size:19px;font-weight:900;letter-spacing:.5px}
   .inv-sub{font-size:10.5px;margin-top:2px}
-  .inv-title{text-align:center;font-size:15px;font-weight:900;letter-spacing:2px;margin:10px 0 8px}
-  .inv-meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}
-  .inv-block{margin:7px 0 3px}
-  .inv-table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:3px}
-  .inv-table th,.inv-table td{border:1px solid #000;padding:4px 6px;text-align:center}
+  .inv-title{text-align:center;font-size:13px;font-weight:900;letter-spacing:2px;margin:5px 0 4px}
+  .inv-meta{display:flex;justify-content:space-between;font-size:9.5px;margin-bottom:4px}
+  .inv-block{margin:4px 0 2px;font-size:9.5px}
+  .inv-table{width:100%;border-collapse:collapse;font-size:9px;margin-top:2px}
+  .inv-table th,.inv-table td{border:1px solid #000;padding:2px 4px;text-align:center}
   .inv-table th{background:#e8e8e8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .inv-totals{width:70mm;margin:10px 0 0 auto;border-collapse:collapse;font-size:11.5px}
-  .inv-totals td{border:1px solid #000;padding:4px 8px}
+  .inv-totals{width:62mm;margin:6px 0 0 auto;border-collapse:collapse;font-size:10px}
+  .inv-totals td{border:1px solid #000;padding:2px 6px}
   .inv-totals td:last-child{text-align:right;white-space:nowrap}
-  .inv-grand td{font-weight:900;font-size:14px;background:#e8e8e8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .inv-client{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}
-  .inv-client td{border:1px solid #000;padding:4px 8px}
-  .inv-cond{font-size:9px;margin-top:12px;border-top:1px solid #000;padding-top:6px;line-height:1.4}
-  .inv-sign{display:flex;justify-content:space-between;gap:30mm;margin-top:22mm}
+  .inv-grand td{font-weight:900;font-size:12px;background:#e8e8e8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .inv-client{width:100%;border-collapse:collapse;font-size:9.5px;margin-top:2px;page-break-inside:avoid}
+  .inv-client td{border:1px solid #000;padding:2px 6px}
+  .inv-cond{font-size:7.5px;margin-top:6px;border-top:1px solid #000;padding-top:4px;line-height:1.35}
+  .inv-sign{display:flex;justify-content:space-between;gap:30mm;margin-top:10mm}
   .inv-signbox{text-align:center;font-size:10.5px;font-weight:700}
-  .inv-line{width:60mm;border-bottom:1px solid #000;margin-top:14mm}
+  .inv-line{width:60mm;border-bottom:1px solid #000;margin-top:9mm}
 }
 
 
@@ -1074,7 +1047,7 @@ function updateInvoice(){
   set('invVal',v('sValore')?v('sValore')+' €':'—');
   set('invNoteC',v('fNote')||'—');
 }
-const INV_CSS="body{font-family:'Lato',Arial,sans-serif;font-size:11.5px;line-height:1.45;color:#000;margin:20px;max-width:800px}#invoice{display:block}.inv-head{display:flex;justify-content:space-between;align-items:center;text-align:left;border-bottom:2.5px solid #000;padding-bottom:7px;margin-bottom:12px}.inv-logo{height:20mm}.inv-headtxt{text-align:right}.inv-brand{font-size:19px;font-weight:900;letter-spacing:.5px}.inv-sub{font-size:10.5px;margin-top:2px}.inv-title{text-align:center;font-size:15px;font-weight:900;letter-spacing:2px;margin:10px 0 8px}.inv-meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}.inv-block{margin:7px 0 3px}.inv-table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:3px}.inv-table th,.inv-table td{border:1px solid #000;padding:4px 6px;text-align:center}.inv-table th{background:#e8e8e8}.inv-totals{width:70mm;margin:10px 0 0 auto;border-collapse:collapse;font-size:11.5px}.inv-totals td{border:1px solid #000;padding:4px 8px}.inv-totals td:last-child{text-align:right;white-space:nowrap}.inv-grand td{font-weight:900;font-size:14px;background:#e8e8e8}.inv-client{width:100%;border-collapse:collapse;font-size:11px;margin-top:3px}.inv-client td{border:1px solid #000;padding:4px 8px}.inv-cond{font-size:9px;margin-top:12px;border-top:1px solid #000;padding-top:6px;line-height:1.4}.inv-sign{display:flex;justify-content:space-between;gap:30mm;margin-top:22mm}.inv-signbox{text-align:center;font-size:10.5px;font-weight:700}.inv-line{width:60mm;border-bottom:1px solid #000;margin-top:14mm}";
+const INV_CSS="body{font-family:'Lato',Arial,sans-serif;font-size:11.5px;line-height:1.45;color:#000;margin:20px;max-width:800px}#invoice{display:block}.inv-head{display:flex;justify-content:space-between;align-items:center;text-align:left;border-bottom:2.5px solid #000;padding-bottom:4px;margin-bottom:6px}.inv-logo{height:20mm}.inv-headtxt{text-align:right}.inv-brand{font-size:19px;font-weight:900;letter-spacing:.5px}.inv-sub{font-size:10.5px;margin-top:2px}.inv-title{text-align:center;font-size:13px;font-weight:900;letter-spacing:2px;margin:5px 0 4px}.inv-meta{display:flex;justify-content:space-between;font-size:9.5px;margin-bottom:4px}.inv-block{margin:4px 0 2px;font-size:9.5px}.inv-table{width:100%;border-collapse:collapse;font-size:9px;margin-top:2px}.inv-table th,.inv-table td{border:1px solid #000;padding:2px 4px;text-align:center}.inv-table th{background:#e8e8e8}.inv-totals{width:62mm;margin:6px 0 0 auto;border-collapse:collapse;font-size:10px}.inv-totals td{border:1px solid #000;padding:2px 6px}.inv-totals td:last-child{text-align:right;white-space:nowrap}.inv-grand td{font-weight:900;font-size:12px;background:#e8e8e8}.inv-client{width:100%;border-collapse:collapse;font-size:9.5px;margin-top:2px;page-break-inside:avoid}.inv-client td{border:1px solid #000;padding:2px 6px}.inv-cond{font-size:7.5px;margin-top:6px;border-top:1px solid #000;padding-top:4px;line-height:1.35}.inv-sign{display:flex;justify-content:space-between;gap:30mm;margin-top:10mm}.inv-signbox{text-align:center;font-size:10.5px;font-weight:700}.inv-line{width:60mm;border-bottom:1px solid #000;margin-top:9mm}";
 function printInvoice(){
   const ua=(typeof navigator!=='undefined')?navigator.userAgent:'';
   const isMobile=(/Android|iPhone|iPad|iPod/i.test(ua))||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
